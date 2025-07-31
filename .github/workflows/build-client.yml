@@ -7,30 +7,17 @@ jobs:
   build:
     runs-on: windows-latest
 
-    env:
-      RUSTDESK_SERVER: ${{ secrets.RUSTDESK_SERVER }}
-      RUSTDESK_KEY: ${{ secrets.RUSTDESK_KEY }}
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout source code + submodules
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
-    - name: Setup Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
 
-    - name: Inject server config
-      run: |
-        echo "pub const SERVER: &str = \"${{ secrets.RUSTDESK_SERVER }}\";" > src\config.rs
-        echo "pub const KEY: &str = \"${{ secrets.RUSTDESK_KEY }}\";" >> src\config.rs
-
-    - name: Build RustDesk Client
-      run: cargo build --release --package rustdesk
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: rustdesk-client
-        path: target/release/rustdesk.exe
+      - name: Build
+        run: cargo build --release --package rustdesk
