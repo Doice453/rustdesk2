@@ -3,6 +3,8 @@
     windows_subsystem = "windows"
 )]
 
+mod config;
+
 use librustdesk::*;
 
 #[cfg(any(target_os = "android", target_os = "ios", feature = "flutter"))]
@@ -31,6 +33,8 @@ fn main() {
         winapi::um::shellscalingapi::SetProcessDpiAwareness(2);
     }
     if let Some(args) = crate::core_main::core_main().as_mut() {
+        args.server = Some(config::get_server().to_string());
+        args.key = Some(config::get_key().to_string());
         ui::start(args);
     }
     common::global_clean();
@@ -47,7 +51,7 @@ fn main() {
         "-p, --port-forward=[PORT-FORWARD-OPTIONS] 'Format: remote-id:local-port:remote-port[:remote-host]'
         -c, --connect=[REMOTE_ID] 'test only'
         -k, --key=[KEY] ''
-       -s, --server=[] 'Start server'",
+        -s, --server=[] 'Start server'",
     );
     let matches = App::new("rustdesk")
         .version(crate::VERSION)
