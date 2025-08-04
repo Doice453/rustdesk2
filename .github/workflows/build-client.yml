@@ -7,6 +7,9 @@ jobs:
   build:
     runs-on: windows-latest
 
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}\vcpkg
+
     steps:
       - name: Checkout source code + submodules
         uses: actions/checkout@v3
@@ -19,11 +22,13 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: Install vcpkg dependencies
+      - name: Install vcpkg and opus
         run: |
           git clone https://github.com/microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat
           .\vcpkg\vcpkg install
+        shell: powershell
 
       - name: Build
         run: cargo build --release --package rustdesk
+
