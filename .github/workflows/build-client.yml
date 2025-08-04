@@ -19,14 +19,15 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: Install vcpkg dependencies (manifest mode)
+      - name: Install vcpkg (for manifest mode)
         run: |
           git clone https://github.com/microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat
-          .\vcpkg\vcpkg install
         shell: powershell
 
       - name: Build
         run: cargo build --release --package rustdesk
         env:
           VCPKG_ROOT: ${{ github.workspace }}\vcpkg
+          VCPKG_DEFAULT_TRIPLET: x64-windows-static
+
