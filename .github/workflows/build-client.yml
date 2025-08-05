@@ -19,11 +19,11 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: Install vcpkg and opus
+      - name: Install vcpkg and dependencies
         run: |
           git clone https://github.com/microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat
-          .\vcpkg\vcpkg install opus:x64-windows
+          .\vcpkg\vcpkg install
         shell: powershell
 
       - name: Build
@@ -36,6 +36,7 @@ jobs:
         with:
           name: rustdesk-windows-client
           path: target/release/rustdesk.exe
+
 
 
 
