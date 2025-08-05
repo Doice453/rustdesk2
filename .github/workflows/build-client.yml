@@ -31,3 +31,10 @@ jobs:
           VCPKG_ROOT: ${{ github.workspace }}\vcpkg
           VCPKG_DEFAULT_TRIPLET: x64-windows-static
 
+      - name: Upload Executable
+        uses: actions/upload-artifact@v3
+        with:
+          name: rustdesk-windows-client
+          path: target/release/rustdesk.exe
+
+
