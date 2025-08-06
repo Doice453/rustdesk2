@@ -19,25 +19,20 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: Install vcpkg and dependencies
+      - name: Install vcpkg and opus
         run: |
           git clone https://github.com/microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat
-          .\vcpkg\vcpkg install
+          .\vcpkg\vcpkg install opus:x64-windows
         shell: powershell
 
       - name: Build
         run: cargo build --release --package rustdesk
         env:
-          VCPKG_ROOT: ${{ github.workspace }}\vcpkg
+          VCPKG_ROOT: ${{ github.workspace }}/vcpkg
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: rustdesk-windows-client
+          name: rustdesk-windows
           path: target/release/rustdesk.exe
-
-
-
-
-
