@@ -19,19 +19,20 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: Install vcpkg and opus
+      - name: Bootstrap vcpkg
         run: |
           git clone https://github.com/microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat
-          .\vcpkg\vcpkg install opus:x64-windows-static
         shell: powershell
 
-      - name: Set environment variables
-        run: |
-          echo "VCPKG_ROOT=${{ github.workspace }}\vcpkg" >> $env:GITHUB_ENV
-          echo "LIB=${{ github.workspace }}\vcpkg\installed\x64-windows-static\lib" >> $env:GITHUB_ENV
-          echo "INCLUDE=${{ github.workspace }}\vcpkg\installed\x64-windows-static\include" >> $env:GITHUB_ENV
+      - name: Install dependencies (manifest mode)
+        run: .\vcpkg\vcpkg install --triplet x64-windows-static
         shell: powershell
+        env:
+          VCPKG_ROOT: ${{ github.workspace }}\vcpkg
 
-      - name: Build
+      - name: Build RustDesk client
         run: cargo build --release --package rustdesk
+        shell: powershell
+        env:
+          VCPKG_ROOT: ${{ github.workspace }}\vcpkg
